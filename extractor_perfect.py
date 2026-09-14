@@ -12,7 +12,9 @@ def extract_graph_perfect_edges(image_path, output_json, debug=True):
     _, thresh = cv2.threshold(gray, 200, 255, cv2.THRESH_BINARY_INV)
     
     # 1. Detect Nodes (solid black dots)
-    contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    kernel_nodes = np.ones((5,5), np.uint8)
+    thresh_nodes = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel_nodes)
+    contours, _ = cv2.findContours(thresh_nodes, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     nodes = []
     for cnt in contours:
         area = cv2.contourArea(cnt)
